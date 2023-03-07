@@ -29,7 +29,7 @@ try {
 
 <body>
     <div class="container-md">
-        <h1>Zadanie 1 - Olympic Games</h1>
+        <h1>Olympic Games</h1>
         <table class="table">
             <thead>
                 <tr>

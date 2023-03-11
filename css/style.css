@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap');
+
+body {
+    font-family: 'Noto Sans Mono', monospace;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 5%;
+    background-color: #282828;
+    color: white;
+}
+
+h1 {
+    margin-bottom: 4%;
+    text-align: center;
+    background-color: #484848;
+    padding: 10px;
+}
+
+h2 {
+    text-align: left;
+    margin-bottom: 2%;
+}
+
+#olympic-table, #best-table {
+    background-color: white;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#best-table {
+    width: 50%;
+    margin-bottom: 5%;
+}
+
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input {
+    background-color: white;
+}
+
+input[type="search"] {
+    margin-bottom: 4%;
+}
+
+#olympic-table_wrapper {
+    margin-bottom: 8%;
+}
+

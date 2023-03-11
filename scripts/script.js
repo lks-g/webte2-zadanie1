@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#myTable').DataTable({
+    $('#olympic-table').DataTable({
         "paging": true,
         "pageLength": 10
     });

@@ -21,11 +21,25 @@ h2 {
     margin-bottom: 2%;
 }
 
-#olympic-table, #best-table {
+#olympic-table,
+#best-table,
+#athlete-table {
     background-color: white;
     border-radius: 5px;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+#best-table tbody tr:nth-child(even) {
+    background-color: rgb(240, 237, 237);
+}
+
+table.dataTable tbody tr:nth-child(even) {
+    background-color: white;
+}
+
+table.dataTable tbody tr:nth-child(odd) {
+    background-color: rgb(240, 237, 237);
 }
 
 #best-table {
@@ -45,4 +59,3 @@ input[type="search"] {
 #olympic-table_wrapper {
     margin-bottom: 8%;
 }
-

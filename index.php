@@ -5,7 +5,7 @@ try {
     $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query = "SELECT person.name, person.surname, game.year, game.city, game.country, game.type, placement.discipline 
+    $query = "SELECT person.id, person.name, person.surname, game.year, game.city, game.country, game.type, placement.discipline 
               FROM person 
               INNER JOIN placement ON person.id = placement.person_id
               INNER JOIN game ON placement.game_id = game.id";
@@ -56,7 +56,7 @@ try {
             $results_top = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($results_top  as $result) {
-                echo "<tr><td>" . $result["name"] . ' ' . $result["surname"] .
+                echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
                     "</td><td>" . $result["gold_medals"] .
                     "</td></tr>";
             }
@@ -79,7 +79,7 @@ try {
         <tbody>
             <?php
             foreach ($results as $result) {
-                echo "<tr><td>" . $result["name"] . ' ' . $result["surname"] .
+                echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
                     "</td><td>" . $result["year"] .
                     "</td><td>" . $result["city"] .
                     "</td><td>" . $result["country"] .

@@ -12,11 +12,8 @@ try {
     $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query = "SELECT person.name, person.surname, person.birth_day, person.birth_place, person.birth_country, person.death_day, person.death_place, 
-                     person.death_country, game.year, game.city, game.country, game.type, placement.discipline, placement.placing FROM person 
-              INNER JOIN placement ON person.id = placement.person_id
-              INNER JOIN game ON placement.game_id = game.id
-              WHERE person.id = :id";
+    $query = "SELECT person.name, person.surname, person.birth_day, person.birth_place, person.birth_country, person.death_day, person.death_place, person.death_country
+              FROM person WHERE person.id = :id";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -56,15 +53,13 @@ try {
                 <a href="register.php" style="color: gray;">Register</a>
             <?php endif; ?>
         </nav>
-
     </header>
 
     <div id="tables">
         <h1><?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></h1>
-
         <table class="table" id="athlete-table">
             <thead>
-                <tr>
+                <tr> 
                     <td>Meno</td>
                     <td>Priezvisko</td>
                     <td>Narodený/á</td>
@@ -76,8 +71,7 @@ try {
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($results)) : ?>
-                    <?php $result = reset($results); ?>
+                <?php foreach ($results as $result) : ?>
                     <tr>
                         <td><?= $result["name"] ?></td>
                         <td><?= $result["surname"] ?></td>
@@ -87,31 +81,6 @@ try {
                         <td><?= $result["death_day"] ?></td>
                         <td><?= $result["death_place"] ?></td>
                         <td><?= $result["death_country"] ?></td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-        <h1>Úspechy</h1>
-        <table class="table" id="athlete-table">
-            <thead>
-                <tr>
-                    <td>Rok</td>
-                    <td>Mesto</td>
-                    <td>Krajina</td>
-                    <td>Typ</td>
-                    <td>Umiestenie</td>
-                    <td>Disciplína</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($results as $result) : ?>
-                    <tr>
-                        <td><?= $result["year"] ?></td>
-                        <td><?= $result["city"] ?></td>
-                        <td><?= $result["country"] ?></td>
-                        <td><?= $result["type"] ?></td>
-                        <td><?= $result["placing"] ?></td>
-                        <td><?= $result["discipline"] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

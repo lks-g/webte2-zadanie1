@@ -1,11 +1,12 @@
 <?php
 
 require_once('config.php');
+
 try {
     $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query = "SELECT person.id, person.name, person.surname, game.year, game.city, game.country, game.type, placement.discipline 
+    $query = "SELECT person.id, person.name, person.surname, game.year, game.city, game.country, game.type, placement.discipline, placement.placing
               FROM person 
               INNER JOIN placement ON person.id = placement.person_id
               INNER JOIN game ON placement.game_id = game.id";
@@ -33,11 +34,50 @@ try {
 
 <body>
     <header>
-        <h1>Slovenský olympionici</h1>
+        <nav class="navbar" id="navbar">
+            <a href="#">Slovenský olympionici</a>
+            <?php if ($is_logged_in) : ?>
+                <a href="admin.php" class="ms-auto" style="color: green;">Admin Panel</a>
+            <?php else : ?>
+                <a href="admin.php" class="ms-auto" style="color: gray;">Admin Panel</a>
+                <a href="login.php" class="ms-3" style="color: gray;">Login</a>
+                <a href="register.php" style="color: gray;">Register</a>
+            <?php endif; ?>
+        </nav>
+
     </header>
 
     <div id="tables">
-        <h2>Top 10 Olympionikov</h2>
+        <h2>Zoznam všetkých olympionikov</h2>
+        <table class="table" id="olympic-table">
+            <thead>
+                <tr>
+                    <td>Meno a priezvisko</td>
+                    <td>Rok</td>
+                    <td>Mesto</td>
+                    <td>Krajina</td>
+                    <td>Umiestenie</td>
+                    <td>Typ</td>
+                    <td>Disciplína</td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($results as $result) {
+                    echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
+                        "</td><td>" . $result["year"] .
+                        "</td><td>" . $result["city"] .
+                        "</td><td>" . $result["country"] .
+                        "</td><td>" . $result["placing"] .
+                        "</td><td>" . $result["type"] .
+                        "</td><td>" . $result["discipline"] .
+                        "</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+
+        <h2>10 najlepších olympionistov podľa počtu medailí</h2>
         <table class="table" id="best-table">
             <thead>
                 <tr>
@@ -61,33 +101,6 @@ try {
                 foreach ($results_top  as $result) {
                     echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
                         "</td><td>" . $result["gold_medals"] .
-                        "</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-
-        <h2>Zoznam všetkých olympionikov</h2>
-        <table class="table" id="olympic-table">
-            <thead>
-                <tr>
-                    <td>Meno a priezvisko</td>
-                    <td>Rok</td>
-                    <td>Mesto</td>
-                    <td>Krajina</td>
-                    <td>Typ</td>
-                    <td>Disciplína</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                foreach ($results as $result) {
-                    echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
-                        "</td><td>" . $result["year"] .
-                        "</td><td>" . $result["city"] .
-                        "</td><td>" . $result["country"] .
-                        "</td><td>" . $result["type"] .
-                        "</td><td>" . $result["discipline"] .
                         "</td></tr>";
                 }
                 ?>

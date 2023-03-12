@@ -12,7 +12,7 @@ try {
     $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query = "SELECT person.name, person.surname, game.year, game.city, game.country, game.type, placement.discipline 
+    $query = "SELECT person.name, person.surname, game.year, game.city, game.country, game.type, placement.discipline, placement.placing 
               FROM person 
               INNER JOIN placement ON person.id = placement.person_id
               INNER JOIN game ON placement.game_id = game.id
@@ -46,34 +46,38 @@ try {
 </head>
 
 <body>
-    <h1>Olympic Games</h1>
+    <h1><?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></h1>
 
-    <h2>Športovec <?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></h2>
-    <table class="table" id="athlete-table">
-        <thead>
-            <tr>
-                <td>Rok</td>
-                <td>Mesto</td>
-                <td>Krajina</td>
-                <td>Typ</td>
-                <td>Disciplína</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($results as $result) : ?>
+    <div id="tables">
+        <h2>Športovec <?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></h2>
+        <table class="table" id="athlete-table">
+            <thead>
                 <tr>
-                    <td><?= $result["year"] ?></td>
-                    <td><?= $result["city"] ?></td>
-                    <td><?= $result["country"] ?></td>
-                    <td><?= $result["type"] ?></td>
-                    <td><?= $result["discipline"] ?></td>
+                    <td>Rok</td>
+                    <td>Mesto</td>
+                    <td>Krajina</td>
+                    <td>Typ</td>
+                    <td>Umiestenie</td>
+                    <td>Disciplína</td>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($results as $result) : ?>
+                    <tr>
+                        <td><?= $result["year"] ?></td>
+                        <td><?= $result["city"] ?></td>
+                        <td><?= $result["country"] ?></td>
+                        <td><?= $result["type"] ?></td>
+                        <td><?= $result["placing"] ?></td>
+                        <td><?= $result["discipline"] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-    <div class="text-end">
-        <a href="index.php" class="btn btn-primary">Späť na domovskú stránku</a>
+        <div class="text-end">
+            <a href="index.php" class="btn btn-primary">Späť na domovskú stránku</a>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

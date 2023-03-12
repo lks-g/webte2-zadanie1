@@ -32,19 +32,22 @@ try {
 </head>
 
 <body>
-    <h1>Olympic Games</h1>
+    <header>
+        <h1>Slovenský olympionici</h1>
+    </header>
 
-    <h2>Top 10 Olympionikov</h2>
-    <table class="table" id="best-table">
-        <thead>
-            <tr>
-                <td>Meno a priezvisko</td>
-                <td>Počet medailí</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $query = "SELECT person.id, person.name, person.surname, COUNT(*) AS gold_medals
+    <div id="tables">
+        <h2>Top 10 Olympionikov</h2>
+        <table class="table" id="best-table">
+            <thead>
+                <tr>
+                    <td>Meno a priezvisko</td>
+                    <td>Počet medailí</td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $query = "SELECT person.id, person.name, person.surname, COUNT(*) AS gold_medals
                   FROM person 
                   INNER JOIN placement ON person.id = placement.person_id AND placement.placing = 1
                   INNER JOIN game ON placement.game_id = game.id
@@ -52,44 +55,45 @@ try {
                   ORDER BY gold_medals DESC
                   LIMIT 10";
 
-            $stmt = $db->query($query);
-            $results_top = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt = $db->query($query);
+                $results_top = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach ($results_top  as $result) {
-                echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
-                    "</td><td>" . $result["gold_medals"] .
-                    "</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+                foreach ($results_top  as $result) {
+                    echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
+                        "</td><td>" . $result["gold_medals"] .
+                        "</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
 
-    <h2>Zoznam všetkých olympionikov</h2>
-    <table class="table" id="olympic-table">
-        <thead>
-            <tr>
-                <td>Meno a priezvisko</td>
-                <td>Rok</td>
-                <td>Mesto</td>
-                <td>Krajina</td>
-                <td>Typ</td>
-                <td>Disciplína</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            foreach ($results as $result) {
-                echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
-                    "</td><td>" . $result["year"] .
-                    "</td><td>" . $result["city"] .
-                    "</td><td>" . $result["country"] .
-                    "</td><td>" . $result["type"] .
-                    "</td><td>" . $result["discipline"] .
-                    "</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+        <h2>Zoznam všetkých olympionikov</h2>
+        <table class="table" id="olympic-table">
+            <thead>
+                <tr>
+                    <td>Meno a priezvisko</td>
+                    <td>Rok</td>
+                    <td>Mesto</td>
+                    <td>Krajina</td>
+                    <td>Typ</td>
+                    <td>Disciplína</td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($results as $result) {
+                    echo "<tr><td><a href='athlete.php?id=" . $result["id"] . "'>" . $result["name"] . ' ' . $result["surname"] . "</a>" .
+                        "</td><td>" . $result["year"] .
+                        "</td><td>" . $result["city"] .
+                        "</td><td>" . $result["country"] .
+                        "</td><td>" . $result["type"] .
+                        "</td><td>" . $result["discipline"] .
+                        "</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

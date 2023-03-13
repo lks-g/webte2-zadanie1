@@ -88,6 +88,9 @@ input[type="search"] {
     top: 0;
     width: 100%;
     z-index: 9999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /* Style the links inside the navbar */
@@ -98,10 +101,16 @@ input[type="search"] {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+    margin-right: auto;
 }
 
 /* Change the background color of the navbar on hover */
 .navbar a:hover {
     background-color: #ddd;
     color: black;
+}
+
+.navbar div {
+    color: gray;
+    margin-right: 10px;
 }

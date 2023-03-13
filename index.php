@@ -33,19 +33,14 @@ try {
 </head>
 
 <body>
-    <header>
-        <nav class="navbar" id="navbar">
-            <a href="#">Slovenský olympionici</a>
-            <?php if ($is_logged_in) : ?>
-                <a href="admin.php" class="ms-auto" style="color: green;">Admin Panel</a>
-            <?php else : ?>
-                <a href="admin.php" class="ms-auto" style="color: gray;">Admin Panel</a>
-                <a href="login.php" class="ms-3" style="color: gray;">Login</a>
-                <a href="register.php" style="color: gray;">Register</a>
-            <?php endif; ?>
-        </nav>
-
-    </header>
+    <nav class="navbar" id="navbar">
+        <a href="#">Slovenský olympionici</a>
+        <div>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
+            <a href="login.php">Admin Panel</a>
+        </div>
+    </nav>
 
     <div id="tables">
         <h2>Zoznam všetkých olympionikov</h2>

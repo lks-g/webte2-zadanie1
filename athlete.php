@@ -46,18 +46,14 @@ try {
 </head>
 
 <body>
-    <header>
-        <nav class="navbar" id="navbar">
-            <?php if ($is_logged_in) : ?>
-                <a href="admin.php" class="ms-auto" style="color: green;">Admin Panel</a>
-            <?php else : ?>
-                <a href="admin.php" class="ms-auto" style="color: gray;">Admin Panel</a>
-                <a href="login.php" class="ms-3" style="color: gray;">Login</a>
-                <a href="register.php" style="color: gray;">Register</a>
-            <?php endif; ?>
-        </nav>
-
-    </header>
+    <nav class="navbar" id="navbar">
+        <a href="index.php">Slovenský olympionici</a>
+        <div>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
+            <a href="login.php">Admin Panel</a>
+        </div>
+    </nav>
 
     <div id="tables">
         <h1><?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></h1>
@@ -118,7 +114,7 @@ try {
         </table>
 
         <div class="text-end">
-            <a href="index.php" class="btn btn-primary">Späť na domovskú stránku</a>
+            <a href="restricted.php" class="btn btn-primary">Späť</a>
         </div>
     </div>
 

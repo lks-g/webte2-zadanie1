@@ -1,54 +1,74 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 require_once 'vendor/autoload.php';
+require_once('config.php');
 
-// Inicializacia Google API klienta
 $client = new Google\Client();
+$client->setAuthConfig('../../client_secret.json');
 
-// Definica konfiguracneho JSON suboru pre autentifikaciu klienta.
-// Subor sa stiahne z Google Cloud Console v zalozke Credentials.
-$client->setAuthConfig('./client_secret.json');
-
-// Nastavenie URI, na ktoru Google server presmeruje poziadavku po uspesnej autentifikacii.
 $redirect_uri = "https://site98.webte.fei.stuba.sk/z1-oh/redirect.php";
 $client->setRedirectUri($redirect_uri);
 
-// Definovanie Scopes - rozsah dat, ktore pozadujeme od pouzivatela z jeho Google uctu.
 $client->addScope("email");
 $client->addScope("profile");
 
-// Ak bolo prihlasenie uspesne, Google server nam posle autorizacny kod v URI,
-// ktory ziskame pomocou premennej $_GET['code']. Pri neuspesnom prihlaseni tento kod nie je odoslany.
 if (isset($_GET['code'])) {
-    // Na zaklade autentifikacneho kodu ziskame "access token".
-    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-    $client->setAccessToken($token['access_token']);
+    try {
+        $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Inicializacia triedy OAuth2, pomocou ktorej ziskame informacie pouzivatela na zaklade Scopes.
-    $oauth = new Google\Service\Oauth2($client);
-    $account_info = $oauth->userinfo->get();
+        $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+        $client->setAccessToken($token['access_token']);
+        $oauth = new Google\Service\Oauth2($client);
+        $account_info = $oauth->userinfo->get();
+        $g_id = $account_info->id;
+        $g_email = $account_info->email;
+        $g_name = $account_info->givenName;
+        $g_surname = $account_info->familyName;
+        $g_fullname = $account_info->name;
 
-    // Ziskanie dat pouzivatela z Google uctu. Tieto data sa nachadzaju aj v tokene po jeho desifrovani.
-    $g_fullname = $account_info->name;
-    $g_id = $account_info->id;
-    $g_email = $account_info->email;
-    $g_name = $account_info->givenName;
-    $g_surname = $account_info->familyName;
+        $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->bindParam(":email", $g_email);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['email'] = $user['email'];
+            header('Location: restricted.php');
+        } else {
+            $stmt = $db->prepare("INSERT INTO users (full_name, email, login, password, 2fa_secret, created_at, google_login) VALUES (:full_name, :email, :login, :password, :2fa_secret, NOW(), :google_login)");
+            $stmt->bindParam(":full_name", $g_fullname);
+            $stmt->bindParam(":email", $g_email);
+            $stmt->bindParam(":login", $g_id);
+            $password = password_hash($g_id, PASSWORD_DEFAULT);
+            $stmt->bindParam(":password", $password);
+            $fa = "None";
+            $stmt->bindValue(":2fa_secret", $fa);
+            $google_login = 1;
+            $stmt->bindParam(":google_login", $google_login);
+            $stmt->execute();
+            $user_id = $db->lastInsertId();
 
-    // Na tomto mieste je vhodne vytvorit poziadavku na vlastnu DB, ktora urobi:
-    // 1. Ak existuje prihlasenie Google uctom -> ziskaj mi minule prihlasenia tohoto pouzivatela.
-    // 2. Ak neexistuje prihlasenie pod tymto Google uctom -> vytvor novy zaznam v tabulke prihlaseni.
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['full_name'] = $g_fullname;
+            $_SESSION['email'] = $g_email;
+            header('Location: restricted.php');
+        }
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
 
-    // Ulozime potrebne data do session.
     $_SESSION['access_token'] = $token['access_token'];
-    $_SESSION['email'] = $g_email;
     $_SESSION['id'] = $g_id;
-    $_SESSION['fullname'] = $g_fullname;
     $_SESSION['name'] = $g_name;
     $_SESSION['surname'] = $g_surname;
+    $_SESSION['fullname'] = $g_fullname;
 }
-// Presmerujem pouzivatela na hlavnu stranku alebo kam potrebujem
-// aj v pripade, ze zabludil na redirect.php mimo prihlasenia.
-header('Location: index.php');

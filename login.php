@@ -1,100 +1,83 @@
 <?php
-require_once('config.php');
 
-if (!isset($_GET['id'])) {
-    header('Location: index.php');
-    exit();
-}
+session_start();
 
-$id = $_GET['id'];
+require_once 'vendor/autoload.php';
 
-try {
-    $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Inicializacia Google API klienta
+$client = new Google\Client();
 
-    $query = "SELECT person.name, person.surname, person.birth_day, person.birth_place, person.birth_country, person.death_day, person.death_place, person.death_country
-              FROM person WHERE person.id = :id";
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Definica konfiguracneho JSON suboru pre autentifikaciu klienta.
+// Subor sa stiahne z Google Cloud Console v zalozke Credentials.
+$client->setAuthConfig('./client_secret.json');
 
-    if (count($results) === 0) {
-        header('Location: index.php');
-        exit();
-    }
-} catch (PDOException $e) {
-    echo $e->getMessage();
-}
+// Nastavenie URI, na ktoru Google server presmeruje poziadavku po uspesnej autentifikacii.
+$redirect_uri = "https://site98.webte.fei.stuba.sk/z1-oh/redirect.php";
+$client->setRedirectUri($redirect_uri);
+
+// Definovanie Scopes - rozsah dat, ktore pozadujeme od pouzivatela z jeho Google uctu.
+$client->addScope("email");
+$client->addScope("profile");
+
+// Vytvorenie URL pre autentifikaciu na Google server - odkaz na Google prihlasenie.
+$auth_url = $client->createAuthUrl();
+
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="sk">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olympic Games - <?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OAuth2 cez Google</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css" />
-    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        html {
+            max-width: 70ch;
+            padding: 3em 1em;
+            margin: auto;
+            line-height: 1.75;
+            font-size: 1.25em;
+        }
+
+        h1,h2,h3,h4,h5,h6 {
+            margin: 3em 0 1em;
+        }
+
+        p,ul,ol {
+            margin-bottom: 2em;
+            color: #1d1d1d;
+            font-family: sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css">
 </head>
-
 <body>
     <header>
-        <nav class="navbar" id="navbar">
-            <?php if ($is_logged_in) : ?>
-                <a href="admin.php" class="ms-auto" style="color: green;">Admin Panel</a>
-            <?php else : ?>
-                <a href="admin.php" class="ms-auto" style="color: gray;">Admin Panel</a>
-                <a href="login.php" class="ms-3" style="color: gray;">Login</a>
-                <a href="register.php" style="color: gray;">Register</a>
-            <?php endif; ?>
-        </nav>
+        <hgroup>
+            <h1>OAuth2 cez Google</h1>
+            <h2>Implementacia pomocou kniznice Google API for PHP</h2>
+        </hgroup>
     </header>
+    <main>
 
-    <div id="tables">
-        <h1><?= $results[0]['name'] . ' ' . $results[0]['surname'] ?></h1>
-        <table class="table" id="athlete-table">
-            <thead>
-                <tr> 
-                    <td>Meno</td>
-                    <td>Priezvisko</td>
-                    <td>Narodený/á</td>
-                    <td>Mesto narodenia</td>
-                    <td>Krajina narodenia</td>
-                    <td>Deň úmrtia</td>
-                    <td>Miesto úmrtia</td>
-                    <td>Krajina úmrtia</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($results as $result) : ?>
-                    <tr>
-                        <td><?= $result["name"] ?></td>
-                        <td><?= $result["surname"] ?></td>
-                        <td><?= $result["birth_day"] ?></td>
-                        <td><?= $result["birth_place"] ?></td>
-                        <td><?= $result["birth_country"] ?></td>
-                        <td><?= $result["death_day"] ?></td>
-                        <td><?= $result["death_place"] ?></td>
-                        <td><?= $result["death_country"] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <?php
+        // Ak som prihlaseny, existuje session premenna.
+        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
+            // Vypis relevantne info a uvitaciu spravu.
+            echo '<h3>Vitaj ' . $_SESSION['name'] . '</h3>';
+            echo '<p>Si prihlaseny ako: ' . $_SESSION['email'] . '</p>';
+            echo '<p><a role="button" href="restricted.php">Zabezpecena stranka</a>';
+            echo '<a role="button" class="secondary" href="logout.php">Odhlas ma</a></p>';
 
-        <div class="text-end">
-            <a href="index.php" class="btn btn-primary">Späť na domovskú stránku</a>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="./DataTables/datatables.min.js"></script>
-    <script src="./scripts/script.js"></script>
+        } else {
+            // Ak nie som prihlaseny, zobraz mi tlacidlo na prihlasenie.
+            echo '<h3>Nie si prihlaseny</h3>';
+            echo '<a role="button" href="' . filter_var($auth_url, FILTER_SANITIZE_URL) . '">Google prihlasenie</a>';
+        }
+        ?>
+    </main>
 </body>
-
 </html>

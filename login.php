@@ -29,7 +29,7 @@ $auth_url = $client->createAuthUrl();
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Olympic Games - Login</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
@@ -42,19 +42,21 @@ $auth_url = $client->createAuthUrl();
         </div>
     </nav>
 
-    <div>
+    <div class="login">
         <?php
         if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            echo '<h3>Vitaj ' . $_SESSION['name'] . '</h3>';
-            echo '<p>Si prihlaseny ako: ' . $_SESSION['email'] . '</p>';
-            echo '<p><a role="button" href="restricted.php">Zabezpecena stranka</a>';
-            echo '<a role="button" class="secondary" href="logout.php">Odhlas ma</a></p>';
+            echo '<h3>Ahoj ' . $_SESSION['name'] . '</h3>';
+            echo '<p>Si prihlaseny pod: ' . $_SESSION['email'] . '</p>';
+            echo '<a href="logout.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Odhlas ma</a></p>';
         } else {
             echo '<h3>Nie si prihlaseny</h3>';
             echo '<a role="button" href="' . filter_var($auth_url, FILTER_SANITIZE_URL) . '">Google prihlasenie</a>';
         }
         ?>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 
 </html>

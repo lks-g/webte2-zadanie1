@@ -18,7 +18,7 @@
         <div>
             <a href="#">Register</a>
             <a href="login.php">Login</a>
-            <a href="admin.php">Admin Panel</a>
+            <a href="#">Admin Panel</a>
         </div>
     </nav>
     </div>

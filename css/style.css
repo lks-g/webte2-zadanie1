@@ -114,3 +114,24 @@ input[type="search"] {
     color: gray;
     margin-right: 10px;
 }
+
+.login {
+    margin: 0 auto;
+    margin-top: 6%;
+    text-align: center;
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 30rem;
+    border-radius: 25px;
+}
+
+h3 {
+    margin-top: 10%;
+}
+
+#logout {
+    margin-top: 15%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}

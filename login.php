@@ -42,19 +42,21 @@ $auth_url = $client->createAuthUrl();
         </div>
     </nav>
 
-    <div class="login">
-        <?php
-        if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-            echo '<h3>Ahoj ' . $_SESSION['name'] . '</h3>';
-            echo '<p>Si prihlaseny pod: ' . $_SESSION['email'] . '</p>';
-            echo '<a href="logout.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Odhlas ma</a></p>';
-        } else {
-            echo '<h3>Nie si prihlaseny</h3>';
-            echo '<a role="button" href="' . filter_var($auth_url, FILTER_SANITIZE_URL) . '">Google prihlasenie</a>';
-        }
-        ?>
-    </div>
+    <?php
+    echo '<div class="login">';
+    if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
+        echo '<h3>Ahoj ' . $_SESSION['name'] . '</h3>';
+        echo '<p>Si prihlaseny pod: ' . $_SESSION['email'] . '</p>';
+        echo '<a href="logout.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Odhlas ma</a></p>';
+    } else {
 
+        echo '<h3>Nie si prihlaseny</h3>';
+        echo '<a class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" href="' . filter_var($auth_url, FILTER_SANITIZE_URL) . '">Google prihlasenie</a>';
+    }
+    echo '<br>Nemáš učet <a id="link" href="register.php">Zaregistuj sa</a>';
+    echo '</div>';
+    ?>
+  
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>

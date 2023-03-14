@@ -44,18 +44,14 @@ try {
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
-<body>
+<body id="admin">
     <nav class="navbar" id="navbar">
         Vitaj <?php echo $fullname ?>
         <div>
-            <a href="logout.php">Odhlasiť</a></p>
+            <a href="logout.php">Odhlasiť</a>
             <a href="admin.php">Admin Panel</a>
         </div>
     </nav>
-
-    <p>Si prihlaseny pod emailom: <?php echo $email ?></p>
-    <p>Tvoj identifikator je: <?php echo $id ?></p>
-    <p>Meno: <?php echo $name ?>, Priezvisko: <?php echo $surname ?></p>
 
     <div id="tables">
         <h2>Zoznam všetkých olympionikov</h2>

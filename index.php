@@ -2,6 +2,12 @@
 
 require_once('config.php');
 
+session_start();
+
+if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
+    header('Location: restricted.php');
+}
+
 try {
     $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -19,7 +25,7 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">

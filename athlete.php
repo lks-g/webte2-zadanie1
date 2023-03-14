@@ -32,7 +32,7 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">

@@ -5,7 +5,13 @@ error_reporting(E_ALL);
 
 require_once('config.php');
 
-//var_dump($_POST["person_id"]);
+session_start();
+
+if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
+    $fullname = $_SESSION['fullname'];
+} else {
+    header('Location: index.php');
+}
 
 try {
     $db = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
@@ -36,9 +42,20 @@ if (!empty($_POST) && !empty($_POST['name'])) {
     <title>Admin panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
+
+    <nav class="navbar" id="navbar">
+        Vitaj <?php echo $fullname ?>
+        <div>
+            <a href="logout.php">Odhlasiť</a>
+            <a href="restricted.php">Hlavná stránka</a>
+        </div>
+    </nav>
+
+
     <div class="container-md">
         <h1>Admin panel</h1>
         <h2>Pridaj sportovca</h2>
@@ -76,7 +93,7 @@ if (!empty($_POST) && !empty($_POST['name'])) {
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
-        <table class="table">
+        <table class="table" id="edit-table">
             <thead>
                 <tr>
                     <td>Meno</td>
@@ -88,10 +105,10 @@ if (!empty($_POST) && !empty($_POST['name'])) {
                 <?php //var_dump($results) 
                 foreach ($persons as $person) {
                     $date = new DateTimeImmutable($person["birth_day"]);
-                    echo "<tr><td><a href='editPerson.php?id=" .  $person["id"] . "'>" . 
-                    $person["name"] . "</a></td><td>" . 
-                    $person["surname"] . "</td><td>" . 
-                    $date->format("d.m.Y") . "</td></tr>";
+                    echo "<tr><td><a href='editPerson.php?id=" .  $person["id"] . "'>" .
+                        $person["name"] . "</a></td><td>" .
+                        $person["surname"] . "</td><td>" .
+                        $date->format("d.m.Y") . "</td></tr>";
                 }
                 ?>
             </tbody>
@@ -100,7 +117,6 @@ if (!empty($_POST) && !empty($_POST['name'])) {
     <div class="text-end">
         <a href="index.php" class="btn btn-primary">Späť na domovskú stránku</a>
     </div>
-    <script src="./scripts/script.js"></script>
 </body>
 
 </html>

@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 
 require_once 'vendor/autoload.php';
@@ -22,7 +18,7 @@ $auth_url = $client->createAuthUrl();
 ?>
 
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -52,8 +48,8 @@ $auth_url = $client->createAuthUrl();
 
         echo '<h3>Nie si prihlaseny</h3>';
         echo '<a class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" href="' . filter_var($auth_url, FILTER_SANITIZE_URL) . '">Google prihlasenie</a>';
+        echo '<br>Nemáš učet <a id="link" href="register.php">Zaregistuj sa</a>';
     }
-    echo '<br>Nemáš učet <a id="link" href="register.php">Zaregistuj sa</a>';
     echo '</div>';
     ?>
   

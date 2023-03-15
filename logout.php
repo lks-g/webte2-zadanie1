@@ -1,15 +1,8 @@
 <?php
 
 session_start();
-
-// Uvolni vsetky session premenne.
 session_unset();
-
-// Vymaz vsetky data zo session.
 session_destroy();
-
-// Ak nechcem zobrazovat obsah, presmeruj pouzivatela na hlavnu stranku.
-// header('location:index.php');
 
 ?>
 
@@ -27,7 +20,7 @@ session_destroy();
 
 <body>
     <div id="logout">
-        <h1>Boli ste uspesne odhlaseni</h1>
+        <h1>Boli ste úspešne odhlasení</h1>
         <a href="index.php" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Vrátiť sa na hlavnú stránku</a>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

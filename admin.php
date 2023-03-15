@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 require_once('config.php');
 
@@ -23,13 +20,6 @@ try {
 } catch (PDOException $e) {
     echo $e->getMessage();
 }
-
-if (!empty($_POST) && !empty($_POST['name'])) {
-    var_dump($_POST);
-    $sql = "INSERT INTO person (name, surname, birth_day, birth_place, birth_country) VALUES (?,?,?,?,?)";
-    $stmt = $db->prepare($sql);
-    $success = $stmt->execute([$_POST['name'], $_POST['surname'], $_POST['birth_day'], $_POST['birth_place'], $_POST['birth_country']]);
-}
 ?>
 
 <!DOCTYPE html>
@@ -42,81 +32,106 @@ if (!empty($_POST) && !empty($_POST['name'])) {
     <title>Admin panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css" />
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-
     <nav class="navbar" id="navbar">
-        Vitaj <?php echo $fullname ?>
+        <a href="login.php">Vitaj <?php echo $fullname ?></a>
         <div>
             <a href="logout.php">Odhlasiť</a>
             <a href="restricted.php">Hlavná stránka</a>
         </div>
     </nav>
 
+    <div id="main">
+        <div class="container-md">
+            <h1>Admin panel</h1>
+            <h2>Pridaj sportovca</h2>
+            <form method="post" action="update_data.php" onsubmit="return validateForm()">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name"><br>
+                <span id="name-error" class="error-message"></span><br>
 
-    <div class="container-md">
-        <h1>Admin panel</h1>
-        <h2>Pridaj sportovca</h2>
-        <form action="#" method="post">
-            <div class="mb-3">
-                <label for="InputName" class="form-label">Name:</label>
-                <input type="text" name="name" class="form-control" id="InputName" required>
-            </div>
-            <div class="mb-3">
-                <label for="InputSurname" class="form-label">Surname:</label>
-                <input type="text" name="surname" class="form-control" id="InputSurname" required>
-            </div>
-            <div class="mb-3">
-                <label for="InputDate" class="form-label">birth day:</label>
-                <input type="date" name="birth_day" class="form-control" id="InputDate" required>
-            </div>
-            <div class="mb-3">
-                <label for="InputbrPlace" class="form-label">birth place:</label>
-                <input type="text" name="birth_place" class="form-control" id="InputBrPlace" required>
-            </div>
-            <div class="mb-3">
-                <label for="InputBrCountry" class="form-label">birth country:</label>
-                <input type="text" name="birth_country" class="form-control" id="InputBrCountry" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <form action="#" method="post">
-            <select name="person_id">
-                <?php
-                foreach ($persons as $person) {
-                    echo '<option value="' . $person['id'] . '">' . $person['name'] . ' ' . $person['surname'] . '</option>';
-                }
-                ?>
-            </select>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+                <label for="surname">Surname:</label>
+                <input type="text" id="surname" name="surname"><br>
+                <span id="surname-error" class="error-message"></span><br>
 
-        <table class="table" id="edit-table">
-            <thead>
-                <tr>
-                    <td>Meno</td>
-                    <td>Priezvisko</td>
-                    <td>Narodenie</td>
-                </tr>
-            </thead>
-            <tbody>
-                <?php //var_dump($results) 
-                foreach ($persons as $person) {
-                    $date = new DateTimeImmutable($person["birth_day"]);
-                    echo "<tr><td><a href='editPerson.php?id=" .  $person["id"] . "'>" .
-                        $person["name"] . "</a></td><td>" .
-                        $person["surname"] . "</td><td>" .
-                        $date->format("d.m.Y") . "</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+                <label for="birth_day">Birth Day:</label>
+                <input type="date" id="birth_day" name="birth_day"><br>
+                <span id="birth_day-error" class="error-message"></span><br>
+
+                <label for="birth_place">Birth Place:</label>
+                <input type="text" id="birth_place" name="birth_place"><br>
+                <span id="birth_place-error" class="error-message"></span><br>
+
+                <label for="birth_country">Birth Country:</label>
+                <input type="text" id="birth_country" name="birth_country"><br>
+                <span id="birth_country-error" class="error-message"></span><br>
+
+                <label for="death_day">Death Day:</label>
+                <input type="date" id="death_day" name="death_day"><br>
+                <span id="death_day-error" class="error-message"></span><br>
+
+                <label for="death_place">Death Place:</label>
+                <input type="text" id="death_place" name="death_place"><br>
+                <span id="death_place-error" class="error-message"></span><br>
+
+                <label for="death_country">Death Country:</label>
+                <input type="text" id="death_country" name="death_country"><br>
+                <span id="death_country-error" class="error-message"></span><br>
+
+                <button type="submit">Save</button>
+            </form>
+
+            <form action="#" method="post">
+                <select name="person_id">
+                    <?php
+                    foreach ($persons as $person) {
+                        echo '<option value="' . $person['id'] . '">' . $person['name'] . ' ' . $person['surname'] . '</option>';
+                    }
+                    ?>
+                </select>
+                <button type="submit" class="btn btn-primary">Edit</button>
+
+                <table class="table" id="edit-table">
+                    <thead>
+                        <tr>
+                            <td>Meno a priezvisko</td>
+                            <td>Narodený/á</td>
+                            <td>Mesto narodenia</td>
+                            <td>Krajina narodenia</td>
+                            <td>Deň úmrtia</td>
+                            <td>Miesto úmrtia</td>
+                            <td>Krajina úmrtia</td>
+                            <td>Operácia</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($persons as $person) {
+                            $date = new DateTimeImmutable($person["birth_day"]);
+
+                            echo "<tr><td><a href='editPerson.php?id=" . $person["id"] . "'>" .
+                                $person["name"] . ' ' . $person["surname"] . "</a>" .
+                                "</td><td>" . $date->format("d.m.Y") .
+                                "</td><td>" . $person["birth_place"] .
+                                "</td><td>" . $person["birth_country"] .
+                                "</td><td>" . $person["death_day"] .
+                                "</td><td>" . $person["death_place"] .
+                                "</td><td>" . $person["death_country"] .
+                                "</td><td><a href='deletePerson.php?id=" . $person["id"] . "' class='btn btn-danger'>Vymazať</a></td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
+        </div>
     </div>
-    <div class="text-end">
-        <a href="index.php" class="btn btn-primary">Späť na domovskú stránku</a>
-    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="./DataTables/datatables.min.js"></script>
+    <script src="./scripts/script.js"></script>
 </body>
 
 </html>

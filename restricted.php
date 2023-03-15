@@ -46,7 +46,7 @@ try {
 
 <body id="admin">
     <nav class="navbar" id="navbar">
-        Vitaj <?php echo $fullname ?>
+        <a href="login.php">Vitaj <?php echo $fullname ?></a>
         <div>
             <a href="logout.php">Odhlasiť</a>
             <a href="admin.php">Admin Panel</a>

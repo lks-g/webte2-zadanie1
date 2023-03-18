@@ -50,6 +50,7 @@ try {
         <div>
             <a href="logout.php">Odhlasiť</a>
             <a href="admin.php">Admin Panel</a>
+            <a href="login.php">Profil</a>
         </div>
     </nav>
 

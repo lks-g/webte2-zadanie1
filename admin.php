@@ -40,6 +40,7 @@ try {
     <nav class="navbar" id="navbar">
         <a href="login.php">Vitaj <?php echo $fullname ?></a>
         <div>
+            <a href="login.php">Profil</a>
             <a href="logout.php">Odhlasiť</a>
             <a href="restricted.php">Hlavná stránka</a>
         </div>
@@ -85,47 +86,37 @@ try {
                 <button type="submit">Save</button>
             </form>
 
-            <form action="#" method="post">
-                <select name="person_id">
+            <table class="table" id="edit-table">
+                <thead>
+                    <tr>
+                        <td>Meno a priezvisko</td>
+                        <td>Narodený/á</td>
+                        <td>Mesto narodenia</td>
+                        <td>Krajina narodenia</td>
+                        <td>Deň úmrtia</td>
+                        <td>Miesto úmrtia</td>
+                        <td>Krajina úmrtia</td>
+                        <td>Operácia</td>
+                    </tr>
+                </thead>
+                <tbody>
                     <?php
                     foreach ($persons as $person) {
-                        echo '<option value="' . $person['id'] . '">' . $person['name'] . ' ' . $person['surname'] . '</option>';
+                        $date = new DateTimeImmutable($person["birth_day"]);
+
+                        echo "<tr><td><a href='editPerson.php?id=" . $person["id"] . "'>" .
+                            $person["name"] . ' ' . $person["surname"] . "</a>" .
+                            "</td><td>" . $date->format("d.m.Y") .
+                            "</td><td>" . $person["birth_place"] .
+                            "</td><td>" . $person["birth_country"] .
+                            "</td><td>" . $person["death_day"] .
+                            "</td><td>" . $person["death_place"] .
+                            "</td><td>" . $person["death_country"] .
+                            "</td><td><a href='deletePerson.php?id=" . $person["id"] . "' class='btn btn-danger'>Vymazať</a></td></tr>";
                     }
                     ?>
-                </select>
-                <button type="submit" class="btn btn-primary">Edit</button>
-
-                <table class="table" id="edit-table">
-                    <thead>
-                        <tr>
-                            <td>Meno a priezvisko</td>
-                            <td>Narodený/á</td>
-                            <td>Mesto narodenia</td>
-                            <td>Krajina narodenia</td>
-                            <td>Deň úmrtia</td>
-                            <td>Miesto úmrtia</td>
-                            <td>Krajina úmrtia</td>
-                            <td>Operácia</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($persons as $person) {
-                            $date = new DateTimeImmutable($person["birth_day"]);
-
-                            echo "<tr><td><a href='editPerson.php?id=" . $person["id"] . "'>" .
-                                $person["name"] . ' ' . $person["surname"] . "</a>" .
-                                "</td><td>" . $date->format("d.m.Y") .
-                                "</td><td>" . $person["birth_place"] .
-                                "</td><td>" . $person["birth_country"] .
-                                "</td><td>" . $person["death_day"] .
-                                "</td><td>" . $person["death_place"] .
-                                "</td><td>" . $person["death_country"] .
-                                "</td><td><a href='deletePerson.php?id=" . $person["id"] . "' class='btn btn-danger'>Vymazať</a></td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
 
         </div>
     </div>

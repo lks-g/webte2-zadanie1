@@ -81,8 +81,6 @@ input[type="search"] {
 }
 
 /*navbar */
-
-/* Style the navbar */
 .navbar {
     overflow: hidden;
     background-color: #383838;
@@ -95,7 +93,6 @@ input[type="search"] {
     align-items: center;
 }
 
-/* Style the links inside the navbar */
 .navbar a {
     float: right;
     display: block;
@@ -106,7 +103,6 @@ input[type="search"] {
     margin-right: auto;
 }
 
-/* Change the background color of the navbar on hover */
 .navbar a:hover {
     background-color: #ddd;
     color: black;

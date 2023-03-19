@@ -31,7 +31,7 @@ $auth_url = $client->createAuthUrl();
 
 <body>
     <nav class="navbar" id="navbar">
-        <a href="index.php">Slovenský olympionici</a>
+        <a href="index.php">Slovenskí olympionici</a>
         <div>
             <a href="register.php">Register</a>
             <a href="#">Login</a>

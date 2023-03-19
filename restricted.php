@@ -84,7 +84,7 @@ try {
             </tbody>
         </table>
 
-        <h2>10 najlepších olympionistov podľa počtu medailí</h2>
+        <h2>10 najlepších olympionikov podľa počtu medailí</h2>
         <table class="table" id="best-table">
             <thead>
                 <tr>
